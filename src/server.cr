@@ -25,8 +25,7 @@ end
 db = DB.open("sqlite3://./contacts.db?journal_mode=wal&synchronous=normal&cache_size=-16000&busy_timeout=5000")
 
 app = RandomContactApp.new(db)
-logger = HTTP::LogHandler.new
-server = HTTP::Server.new([logger, app] of HTTP::Handler)
+server = HTTP::Server.new([app] of HTTP::Handler)
 
 Signal::INT.trap do
   puts "Shutting down."
