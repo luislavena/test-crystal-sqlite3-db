@@ -12,13 +12,15 @@ INSERT_SQL = <<-SQL
   INSERT INTO contacts (id, name, age) VALUES (?, ?, ?);
 SQL
 
-DB.open("sqlite3://./contacts.db") do |db|
+DB.open("sqlite3:contacts.db?journal_mode=wal&synchronous=normal&busy_timeout=5000") do |db|
   db.exec CREATE_SQL
 
-  db.transaction do
+  db.transaction do |tx|
+    conn = tx.connection
+
     500.times do |t|
       id = t + 1
-      db.exec INSERT_SQL, id, "Name #{id}", id + 20
+      conn.exec INSERT_SQL, id, "Name #{id}", id + 20
     end
   end
 end
