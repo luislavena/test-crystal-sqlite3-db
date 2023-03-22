@@ -22,30 +22,10 @@ class RandomContactApp
   end
 end
 
-db = DB.open("sqlite3://./contacts.db")
-db.setup_connection do |conn|
-  # 1. Avoid writers to block readers by using WAL mode
-  # Ref. https://sqlite.org/pragma.html#pragma_journal_mode
-  conn.exec "PRAGMA journal_mode = WAL;"
-
-  # 2. Use normal synchronization to speed up operations (good combo with WAL)
-  # Ref. https://sqlite.org/pragma.html#pragma_synchronous
-  conn.exec "PRAGMA synchronous = NORMAL;"
-
-  # 3. Increases cache size available (from 2MB to 16MB in KB)
-  # Ref. https://sqlite.org/pragma.html#pragma_cache_size
-  conn.exec "PRAGMA cache_size = -16000;"
-
-  # 4. Allow waiting on periodic write locks from replication (or other process)
-  # Refs.
-  # - https://www.sqlite.org/pragma.html#pragma_busy_timeout
-  # - https://litestream.io/tips/#busy-timeout
-  conn.exec "PRAGMA busy_timeout = 5000;"
-end
+db = DB.open("sqlite3://./contacts.db?journal_mode=wal&synchronous=normal&cache_size=-16000&busy_timeout=5000")
 
 app = RandomContactApp.new(db)
-logger = HTTP::LogHandler.new
-server = HTTP::Server.new([logger, app] of HTTP::Handler)
+server = HTTP::Server.new([app] of HTTP::Handler)
 
 Signal::INT.trap do
   puts "Shutting down."
