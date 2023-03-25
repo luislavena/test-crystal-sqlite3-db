@@ -11,19 +11,19 @@ class RandomContactApp
 
   def call(context)
     rand_id = rand(1..500)
-    name = fetch_name(rand_id)
+    age = fetch_age(rand_id)
 
     context.response.content_type = "text/plain"
-    context.response.print "Hello #{name}!"
+    context.response.print "Age: #{age}!"
   end
 
-  private def fetch_name(id)
+  private def fetch_age(id) : Int64
     {% if flag?(:use_conn) %}
       db.using_connection do |conn|
-        conn.scalar("SELECT name FROM contacts WHERE id = ? LIMIT 1;", id).as(String)
+        conn.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
       end
     {% else %}
-      db.scalar("SELECT name FROM contacts WHERE id = ? LIMIT 1;", id).as(String)
+      db.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
     {% end %}
   end
 end
