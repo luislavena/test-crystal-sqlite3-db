@@ -18,13 +18,17 @@ class RandomContactApp
   end
 
   private def fetch_name(id)
-    db.using_connection do |conn|
-      conn.scalar("SELECT name FROM contacts WHERE id = ? LIMIT 1;", id).as(String)
-    end
+    {% if flag?(:use_conn) %}
+      db.using_connection do |conn|
+        conn.scalar("SELECT name FROM contacts WHERE id = ? LIMIT 1;", id).as(String)
+      end
+    {% else %}
+      db.scalar("SELECT name FROM contacts WHERE id = ? LIMIT 1;", id).as(String)
+    {% end %}
   end
 end
 
-db = DB.open("sqlite3:contacts.db?journal_mode=wal&synchronous=normal&cache_size=-16000&busy_timeout=5000")
+db = DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
 
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)

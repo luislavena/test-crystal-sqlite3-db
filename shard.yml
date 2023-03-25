@@ -1,4 +1,4 @@
-name: test-sqlite3
+name: test-crystal-sqlite3-db
 version: 0.1.0
 license: Apache-2.0
 crystal: "~> 1.7.0, < 2.0.0"
@@ -9,10 +9,9 @@ targets:
     main: src/generate.cr
   server:
     main: src/server.cr
+  test:
+    main: src/test.cr
 dependencies:
-  db:
-    github: crystal-lang/crystal-db
-    version: "~> 0.11.0"
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    branch: master
+    branch: fix-mt

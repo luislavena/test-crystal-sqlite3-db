@@ -1,10 +1,11 @@
+# NOTICE: This lockfile contains some overrides from shard.override.yml
 version: 2.0
 shards:
-  db:
+  db: # Overridden
     git: https://github.com/crystal-lang/crystal-db.git
-    version: 0.11.0
+    version: 0.11.0+git.commit.76eba76decee20f238edc319d31ead12e096fbc8
 
-  sqlite3:
+  sqlite3: # Overridden
     git: https://github.com/crystal-lang/crystal-sqlite3.git
-    version: 0.19.0+git.commit.caebc0a59570584d48ecb1c7e72708198c47cf44
+    version: 0.19.0+git.commit.d759ae0a9b1fb6f1910badd9fa251c4fd4153b33
 

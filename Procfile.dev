@@ -1,2 +1,2 @@
 # watch for changes in src (*.cr), restart child process on changes
-server: watchexec -w src -f '**/*.cr' -r -- shards run server
+server: watchexec -w src -f '**/*.cr' -r -- shards run -Dpreview_mt server

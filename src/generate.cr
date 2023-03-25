@@ -12,7 +12,7 @@ INSERT_SQL = <<-SQL
   INSERT INTO contacts (id, name, age) VALUES (?, ?, ?);
 SQL
 
-DB.open("sqlite3:contacts.db?journal_mode=wal&synchronous=normal&busy_timeout=5000") do |db|
+DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000") do |db|
   db.exec CREATE_SQL
 
   db.transaction do |tx|
