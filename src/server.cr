@@ -33,7 +33,7 @@ db = DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)
 
-Signal::INT.trap do
+Process.on_interrupt do
   puts "Shutting down."
   server.close
 end
