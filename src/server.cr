@@ -1,10 +1,11 @@
 require "http/server"
 require "sqlite3"
+require "syn/pool"
 
 class RandomContactApp
   include HTTP::Handler
 
-  getter db : DB::Database
+  getter db : Syn::Pool(DB::Connection)
 
   def initialize(@db)
   end
@@ -18,17 +19,15 @@ class RandomContactApp
   end
 
   private def fetch_age(id) : Int64
-    {% if flag?(:use_conn) %}
-      db.using_connection do |conn|
-        conn.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
-      end
-    {% else %}
-      db.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
-    {% end %}
+    db.using do |conn|
+      conn.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
+    end
   end
 end
 
-db = DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
+db = Syn::Pool(DB::Connection).new do
+  DB.connect("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
+end
 
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)
@@ -51,6 +50,3 @@ server.listen
 puts "Shutdown completed."
 
 Fiber.yield
-
-# cleanup
-db.close
