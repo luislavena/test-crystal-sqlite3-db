@@ -25,7 +25,10 @@ class RandomContactApp
   end
 end
 
-db = Syn::Pool(DB::Connection).new do
+counter = Atomic.new(0)
+
+db = Syn::Pool(DB::Connection).new(capacity: 100) do
+  counter.add(1)
   DB.connect("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
 end
 
@@ -50,3 +53,5 @@ server.listen
 puts "Shutdown completed."
 
 Fiber.yield
+
+puts "Total used connections: #{counter.get}"
