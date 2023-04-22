@@ -9,6 +9,8 @@ targets:
     main: src/generate.cr
   server:
     main: src/server.cr
+  noop:
+    main: src/noop.cr
   test:
     main: src/test.cr
 dependencies:
