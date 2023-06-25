@@ -16,4 +16,4 @@ targets:
 dependencies:
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    branch: fix-mt
+    version: "~> 0.20.0"
