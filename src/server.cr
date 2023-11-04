@@ -18,13 +18,7 @@ class RandomContactApp
   end
 
   private def fetch_age(id) : Int64
-    {% if flag?(:use_conn) %}
-      db.using_connection do |conn|
-        conn.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
-      end
-    {% else %}
-      db.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
-    {% end %}
+    db.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
   end
 end
 
