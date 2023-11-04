@@ -22,7 +22,9 @@ class RandomContactApp
   end
 end
 
-db = DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
+DATABASE_URL = ENV.fetch("DATABASE_URL", "sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
+
+db = DB.open(DATABASE_URL)
 
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)
