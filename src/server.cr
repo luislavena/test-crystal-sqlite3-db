@@ -24,6 +24,7 @@ end
 
 DATABASE_URL = ENV.fetch("DATABASE_URL", "sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
 
+puts "Using: '#{DATABASE_URL}'"
 db = DB.open(DATABASE_URL)
 
 app = RandomContactApp.new(db)
