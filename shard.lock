@@ -5,6 +5,10 @@ shards:
     git: https://github.com/crystal-lang/crystal-db.git
     version: 0.12.0+git.commit.76d8bb6a6ef4029c57a454d02dc6757f2a40bcc0
 
+  pg:
+    git: https://github.com/will/crystal-pg.git
+    version: 0.27.0
+
   sqlite3:
     git: https://github.com/crystal-lang/crystal-sqlite3.git
     version: 0.20.0

@@ -1,18 +1,21 @@
-require "sqlite3"
+require "pg"
 
 CREATE_SQL = <<-SQL
   CREATE TABLE IF NOT EXISTS contacts (
     id INTEGER PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    age INTEGER NOT NULL
+    age BIGINT NOT NULL
   );
 SQL
 
 INSERT_SQL = <<-SQL
-  INSERT INTO contacts (id, name, age) VALUES (?, ?, ?);
+  INSERT INTO contacts (id, name, age) VALUES ($1, $2, $3);
 SQL
 
-DB.open("sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000") do |db|
+DB_URL = ENV.fetch("DB_URL", "postgres://postgres@localhost/postgres")
+puts "Using: '#{DB_URL}'"
+
+DB.open(DB_URL) do |db|
   db.exec CREATE_SQL
 
   db.transaction do |tx|
