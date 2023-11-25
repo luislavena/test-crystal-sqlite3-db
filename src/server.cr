@@ -1,5 +1,5 @@
 require "http/server"
-require "sqlite3"
+require "pg"
 
 class RandomContactApp
   include HTTP::Handler
@@ -18,14 +18,14 @@ class RandomContactApp
   end
 
   private def fetch_age(id) : Int64
-    db.scalar("SELECT age FROM contacts WHERE id = ? LIMIT 1;", id).as(Int64)
+    db.scalar("SELECT age FROM contacts WHERE id = $1 LIMIT 1;", id).as(Int64)
   end
 end
 
-DATABASE_URL = ENV.fetch("DATABASE_URL", "sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
+DB_URL = ENV.fetch("DB_URL", "postgres://postgres@localhost/postgres")
+puts "Using: '#{DB_URL}'"
 
-puts "Using: '#{DATABASE_URL}'"
-db = DB.open(DATABASE_URL)
+db = DB.open(DB_URL)
 
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)
