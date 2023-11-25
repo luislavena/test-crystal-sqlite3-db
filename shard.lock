@@ -13,3 +13,7 @@ shards:
     git: https://github.com/crystal-lang/crystal-sqlite3.git
     version: 0.20.0
 
+  syn:
+    git: https://github.com/ysbaddaden/syn.git
+    version: 0.2.0+git.commit.1c662831a5c1a3310b6c7c59e99e21213afd89f6
+

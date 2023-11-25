@@ -20,3 +20,6 @@ dependencies:
   pg:
     github: will/crystal-pg
     version: "~> 0.27.0"
+  syn:
+    github: ysbaddaden/syn
+    branch: main

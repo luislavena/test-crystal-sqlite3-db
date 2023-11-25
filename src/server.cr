@@ -1,10 +1,11 @@
 require "http/server"
 require "pg"
+require "syn/pool"
 
 class RandomContactApp
   include HTTP::Handler
 
-  getter db : DB::Database
+  getter db : Syn::Pool(DB::Connection)
 
   def initialize(@db)
   end
@@ -18,14 +19,19 @@ class RandomContactApp
   end
 
   private def fetch_age(id) : Int64
-    db.scalar("SELECT age FROM contacts WHERE id = $1 LIMIT 1;", id).as(Int64)
+    db.using do |conn|
+      conn.scalar("SELECT age FROM contacts WHERE id = $1 LIMIT 1;", id).as(Int64)
+    end
   end
 end
 
 DB_URL = ENV.fetch("DB_URL", "postgres://postgres@localhost/postgres")
 puts "Using: '#{DB_URL}'"
 
-db = DB.open(DB_URL)
+puts "Using: '#{DB_URL}'"
+db = Syn::Pool(DB::Connection).new do
+  DB.connect(DB_URL)
+end
 
 app = RandomContactApp.new(db)
 server = HTTP::Server.new([app] of HTTP::Handler)
@@ -48,6 +54,3 @@ server.listen
 puts "Shutdown completed."
 
 Fiber.yield
-
-# cleanup
-db.close
