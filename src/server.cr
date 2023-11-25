@@ -27,9 +27,10 @@ end
 
 DB_URL = ENV.fetch("DB_URL", "postgres://postgres@localhost/postgres")
 puts "Using: '#{DB_URL}'"
+counter = Atomic.new(0)
 
-puts "Using: '#{DB_URL}'"
 db = Syn::Pool(DB::Connection).new do
+  counter.add(1)
   DB.connect(DB_URL)
 end
 
@@ -54,3 +55,5 @@ server.listen
 puts "Shutdown completed."
 
 Fiber.yield
+
+puts "Total used connections: #{counter.get}"
