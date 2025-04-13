@@ -14,7 +14,7 @@ COUNT.times do |i|
   end
 end
 
-sleep 5
+sleep 5.seconds
 Fiber.yield
 
 db.close
