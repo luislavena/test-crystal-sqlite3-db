@@ -27,11 +27,12 @@ end
 
 DATABASE_URL = ENV.fetch("DATABASE_URL", "sqlite3:data.db?journal_mode=wal&synchronous=normal&busy_timeout=5000")
 
+lock = Mutex.new
 counter = Atomic.new(0)
 
 puts "Using: '#{DATABASE_URL}'"
 db = Syn::Pool(DB::Connection).new(capacity: 100) do
-  counter.add(1)
+  lock.synchronize { counter.add(1) }
   DB.connect(DATABASE_URL)
 end
 
