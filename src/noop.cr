@@ -12,7 +12,7 @@ end
 app = HelloApp.new
 server = HTTP::Server.new([app] of HTTP::Handler)
 
-Process.on_interrupt do
+Process.on_terminate do
   puts "Shutting down."
   server.close
 end
